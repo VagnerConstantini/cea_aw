@@ -2,53 +2,67 @@ version: 2
 
 sources:
   - name: raw_adventure_works
-    # herda o database do ambiente (FEA25_05)
+    # Database is inherited from the environment (target.database = FEA25_05).
     schema: raw_adventure_works
-    description: "Tabelas brutas da AdventureWorks usadas no domínio Sales."
+    description: "Raw AdventureWorks tables used for the Sales domain."
+
     tables:
 
-      # ----- SALES -----
+      # SALES
       - name: salesorderheader
         identifier: SALES_SALESORDERHEADER
-        description: "Cabeçalho dos pedidos."
+        description: "Order headers."
         columns:
           - name: SalesOrderID
+            description: "Primary key of the order header."
             tests: [not_null, unique]
           - name: CustomerID
+            description: "Customer identifier."
             tests: [not_null]
           - name: OrderDate
+            description: "Order creation date."
             tests: [not_null]
 
       - name: salesorderdetail
         identifier: SALES_SALESORDERDETAIL
-        description: "Linhas (itens) dos pedidos."
+        description: "Order line items (detail rows)."
         tests:
           - dbt_utils.unique_combination_of_columns:
               combination_of_columns: [SalesOrderID, SalesOrderDetailID]
         columns:
-          - name: SalesOrderID       # FK para header
+          - name: SalesOrderID
+            description: "FK to order header."
             tests: [not_null]
           - name: SalesOrderDetailID
+            description: "Line identifier inside an order."
             tests: [not_null]
           - name: ProductID
+            description: "FK to product."
             tests: [not_null]
           - name: OrderQty
+            description: "Quantity ordered."
             tests: [not_null]
           - name: UnitPrice
+            description: "Unit price applied on the line."
             tests: [not_null]
           - name: UnitPriceDiscount
+            description: "Unit discount applied on the line."
             tests: [not_null]
 
       - name: customer
         identifier: SALES_CUSTOMER
+        description: "Customers (person or store accounts)."
         columns:
           - name: CustomerID
             tests: [not_null, unique]
           - name: PersonID
+            description: "FK to person (nullable when it is a store)."
           - name: StoreID
+            description: "FK to store (nullable when it is a person)."
 
       - name: salesperson
         identifier: SALES_SALESPERSON
+        description: "Salespeople and their attributes."
         columns:
           - name: BusinessEntityID
             tests: [not_null, unique]
@@ -57,6 +71,7 @@ sources:
 
       - name: store
         identifier: SALES_STORE
+        description: "Stores (B2B customers)."
         columns:
           - name: BusinessEntityID
             tests: [not_null, unique]
@@ -65,6 +80,7 @@ sources:
 
       - name: creditcard
         identifier: SALES_CREDITCARD
+        description: "Credit cards used by customers."
         columns:
           - name: CreditCardID
             tests: [not_null, unique]
@@ -73,6 +89,7 @@ sources:
 
       - name: salesreason
         identifier: SALES_SALESREASON
+        description: "Sales reasons (e.g., Promotion, Marketing)."
         columns:
           - name: SalesReasonID
             tests: [not_null, unique]
@@ -83,6 +100,7 @@ sources:
 
       - name: salesorderheadersalesreason
         identifier: SALES_SALESORDERHEADERSALESREASON
+        description: "Bridge between orders and sales reasons (M:N)."
         tests:
           - dbt_utils.unique_combination_of_columns:
               combination_of_columns: [SalesOrderID, SalesReasonID]
@@ -92,9 +110,10 @@ sources:
           - name: SalesReasonID
             tests: [not_null]
 
-      # ----- PRODUCTION (produtos) -----
+      # PRODUCTION
       - name: product
         identifier: PRODUCTION_PRODUCT
+        description: "Products catalog."
         columns:
           - name: ProductID
             tests: [not_null, unique]
@@ -104,6 +123,7 @@ sources:
 
       - name: productsubcategory
         identifier: PRODUCTION_PRODUCTSUBCATEGORY
+        description: "Product subcategories."
         columns:
           - name: ProductSubcategoryID
             tests: [not_null, unique]
@@ -114,15 +134,17 @@ sources:
 
       - name: productcategory
         identifier: PRODUCTION_PRODUCTCATEGORY
+        description: "Product categories."
         columns:
           - name: ProductCategoryID
             tests: [not_null, unique]
           - name: Name
             tests: [not_null]
 
-      # ----- PERSON (geografia & pessoa) -----
+      # PERSON
       - name: person
         identifier: PERSON_PERSON
+        description: "Persons (names and types)."
         columns:
           - name: BusinessEntityID
             tests: [not_null, unique]
@@ -130,6 +152,7 @@ sources:
 
       - name: address
         identifier: PERSON_ADDRESS
+        description: "Addresses (city + state/province)."
         columns:
           - name: AddressID
             tests: [not_null, unique]
@@ -140,6 +163,7 @@ sources:
 
       - name: stateprovince
         identifier: PERSON_STATEPROVINCE
+        description: "States/Provinces and their country codes."
         columns:
           - name: StateProvinceID
             tests: [not_null, unique]
@@ -150,6 +174,7 @@ sources:
 
       - name: countryregion
         identifier: PERSON_COUNTRYREGION
+        description: "Country/Region reference table."
         columns:
           - name: CountryRegionCode
             tests: [not_null, unique]
