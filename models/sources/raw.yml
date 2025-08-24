@@ -1,0 +1,157 @@
+version: 2
+
+sources:
+  - name: raw_adventure_works
+    # herda o database do ambiente (FEA25_05)
+    schema: raw_adventure_works
+    description: "Tabelas brutas da AdventureWorks usadas no domínio Sales."
+    tables:
+
+      # ----- SALES -----
+      - name: salesorderheader
+        identifier: SALES_SALESORDERHEADER
+        description: "Cabeçalho dos pedidos."
+        columns:
+          - name: SalesOrderID
+            tests: [not_null, unique]
+          - name: CustomerID
+            tests: [not_null]
+          - name: OrderDate
+            tests: [not_null]
+
+      - name: salesorderdetail
+        identifier: SALES_SALESORDERDETAIL
+        description: "Linhas (itens) dos pedidos."
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns: [SalesOrderID, SalesOrderDetailID]
+        columns:
+          - name: SalesOrderID       # FK para header
+            tests: [not_null]
+          - name: SalesOrderDetailID
+            tests: [not_null]
+          - name: ProductID
+            tests: [not_null]
+          - name: OrderQty
+            tests: [not_null]
+          - name: UnitPrice
+            tests: [not_null]
+          - name: UnitPriceDiscount
+            tests: [not_null]
+
+      - name: customer
+        identifier: SALES_CUSTOMER
+        columns:
+          - name: CustomerID
+            tests: [not_null, unique]
+          - name: PersonID
+          - name: StoreID
+
+      - name: salesperson
+        identifier: SALES_SALESPERSON
+        columns:
+          - name: BusinessEntityID
+            tests: [not_null, unique]
+          - name: TerritoryID
+          - name: CommissionPct
+
+      - name: store
+        identifier: SALES_STORE
+        columns:
+          - name: BusinessEntityID
+            tests: [not_null, unique]
+          - name: Name
+            tests: [not_null]
+
+      - name: creditcard
+        identifier: SALES_CREDITCARD
+        columns:
+          - name: CreditCardID
+            tests: [not_null, unique]
+          - name: CardType
+            tests: [not_null]
+
+      - name: salesreason
+        identifier: SALES_SALESREASON
+        columns:
+          - name: SalesReasonID
+            tests: [not_null, unique]
+          - name: Name
+            tests: [not_null]
+          - name: ReasonType
+            tests: [not_null]
+
+      - name: salesorderheadersalesreason
+        identifier: SALES_SALESORDERHEADERSALESREASON
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns: [SalesOrderID, SalesReasonID]
+        columns:
+          - name: SalesOrderID
+            tests: [not_null]
+          - name: SalesReasonID
+            tests: [not_null]
+
+      # ----- PRODUCTION (produtos) -----
+      - name: product
+        identifier: PRODUCTION_PRODUCT
+        columns:
+          - name: ProductID
+            tests: [not_null, unique]
+          - name: Name
+            tests: [not_null]
+          - name: ProductSubcategoryID
+
+      - name: productsubcategory
+        identifier: PRODUCTION_PRODUCTSUBCATEGORY
+        columns:
+          - name: ProductSubcategoryID
+            tests: [not_null, unique]
+          - name: ProductCategoryID
+            tests: [not_null]
+          - name: Name
+            tests: [not_null]
+
+      - name: productcategory
+        identifier: PRODUCTION_PRODUCTCATEGORY
+        columns:
+          - name: ProductCategoryID
+            tests: [not_null, unique]
+          - name: Name
+            tests: [not_null]
+
+      # ----- PERSON (geografia & pessoa) -----
+      - name: person
+        identifier: PERSON_PERSON
+        columns:
+          - name: BusinessEntityID
+            tests: [not_null, unique]
+          - name: PersonType
+
+      - name: address
+        identifier: PERSON_ADDRESS
+        columns:
+          - name: AddressID
+            tests: [not_null, unique]
+          - name: City
+            tests: [not_null]
+          - name: StateProvinceID
+            tests: [not_null]
+
+      - name: stateprovince
+        identifier: PERSON_STATEPROVINCE
+        columns:
+          - name: StateProvinceID
+            tests: [not_null, unique]
+          - name: CountryRegionCode
+            tests: [not_null]
+          - name: Name
+            tests: [not_null]
+
+      - name: countryregion
+        identifier: PERSON_COUNTRYREGION
+        columns:
+          - name: CountryRegionCode
+            tests: [not_null, unique]
+          - name: Name
+            tests: [not_null]
