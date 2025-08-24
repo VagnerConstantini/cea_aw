@@ -17,8 +17,12 @@ sources:
             description: "Primary key of the order header."
             tests: [not_null, unique]
           - name: CustomerID
-            description: "Customer identifier."
-            tests: [not_null]
+            description: "FK to customer."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'customer')
+                  field: CustomerID
           - name: OrderDate
             description: "Order creation date."
             tests: [not_null]
@@ -32,22 +36,42 @@ sources:
         columns:
           - name: SalesOrderID
             description: "FK to order header."
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'salesorderheader')
+                  field: SalesOrderID
           - name: SalesOrderDetailID
             description: "Line identifier inside an order."
             tests: [not_null]
           - name: ProductID
             description: "FK to product."
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'product')
+                  field: ProductID
           - name: OrderQty
             description: "Quantity ordered."
-            tests: [not_null]
+            tests:
+              - not_null
+              - dbt_utils.expression_is_true:
+                  expression: ">= 1"
+                  severity: warn
           - name: UnitPrice
             description: "Unit price applied on the line."
-            tests: [not_null]
+            tests:
+              - not_null
+              - dbt_utils.expression_is_true:
+                  expression: ">= 0"
+                  severity: warn
           - name: UnitPriceDiscount
             description: "Unit discount applied on the line."
-            tests: [not_null]
+            tests:
+              - not_null
+              - dbt_utils.expression_is_true:
+                  expression: "between 0 and 1"
+                  severity: warn
 
       - name: customer
         identifier: SALES_CUSTOMER
@@ -57,17 +81,18 @@ sources:
             tests: [not_null, unique]
           - name: PersonID
             description: "FK to person (nullable when it is a store)."
+            tests:
+              - relationships:
+                  to: source('raw_adventure_works', 'person')
+                  field: BusinessEntityID
+                  severity: warn
           - name: StoreID
             description: "FK to store (nullable when it is a person)."
-
-      - name: salesperson
-        identifier: SALES_SALESPERSON
-        description: "Salespeople and their attributes."
-        columns:
-          - name: BusinessEntityID
-            tests: [not_null, unique]
-          - name: TerritoryID
-          - name: CommissionPct
+            tests:
+              - relationships:
+                  to: source('raw_adventure_works', 'store')
+                  field: BusinessEntityID
+                  severity: warn
 
       - name: store
         identifier: SALES_STORE
@@ -106,9 +131,17 @@ sources:
               combination_of_columns: [SalesOrderID, SalesReasonID]
         columns:
           - name: SalesOrderID
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'salesorderheader')
+                  field: SalesOrderID
           - name: SalesReasonID
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'salesreason')
+                  field: SalesReasonID
 
       # PRODUCTION
       - name: product
@@ -120,6 +153,12 @@ sources:
           - name: Name
             tests: [not_null]
           - name: ProductSubcategoryID
+            description: "FK to product subcategory (nullable for some products)."
+            tests:
+              - relationships:
+                  to: source('raw_adventure_works', 'productsubcategory')
+                  field: ProductSubcategoryID
+                  severity: warn
 
       - name: productsubcategory
         identifier: PRODUCTION_PRODUCTSUBCATEGORY
@@ -128,7 +167,11 @@ sources:
           - name: ProductSubcategoryID
             tests: [not_null, unique]
           - name: ProductCategoryID
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'productcategory')
+                  field: ProductCategoryID
           - name: Name
             tests: [not_null]
 
@@ -149,6 +192,11 @@ sources:
           - name: BusinessEntityID
             tests: [not_null, unique]
           - name: PersonType
+            description: "Optional person type code."
+            tests:
+              - accepted_values:
+                  values: ['SC','IN','SP','EM','VC','GC']
+                  severity: warn
 
       - name: address
         identifier: PERSON_ADDRESS
@@ -159,7 +207,11 @@ sources:
           - name: City
             tests: [not_null]
           - name: StateProvinceID
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'stateprovince')
+                  field: StateProvinceID
 
       - name: stateprovince
         identifier: PERSON_STATEPROVINCE
@@ -168,7 +220,11 @@ sources:
           - name: StateProvinceID
             tests: [not_null, unique]
           - name: CountryRegionCode
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works', 'countryregion')
+                  field: CountryRegionCode
           - name: Name
             tests: [not_null]
 
