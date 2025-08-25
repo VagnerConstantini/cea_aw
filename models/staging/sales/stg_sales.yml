@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: stg_sales__order_header
+    description: "Cleaned order headers for downstream marts."
+    columns:
+      - name: sales_order_id
+        description: "Natural key of the order header."
+        tests: [not_null, unique]
+
+      - name: order_date
+        description: "Order creation date."
+        tests: [not_null]
+
+      - name: status_code
+        description: "Numeric status code; mapped to a name via seed downstream."
+        tests: [not_null]
+
+      - name: customer_id
+        description: "FK to sales customer."
+        tests: [not_null]
+
+      - name: ship_to_address_id
+        description: "FK to ship-to address."
+        tests: [not_null]
+
+      - name: credit_card_id
+        description: "FK to credit card used in the order (nullable)."
+
+      - name: subtotal_amount
+        description: "Sum of line amounts before taxes and freight."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              severity: warn
+
+      - name: tax_amount
+        description: "Total taxes charged on the order."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              severity: warn
+
+      - name: freight_amount
+        description: "Shipping freight amount."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              severity: warn
+
+      - name: total_due_amount
+        description: "Final amount due (subtotal + tax + freight)."
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+              severity: warn
+
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: "abs(total_due_amount - (subtotal_amount + tax_amount + freight_amount)) <= 0.01"
+          severity: warn
