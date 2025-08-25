@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: raw_adventure_works
-    # Database is inherited from the environment (target.database = FEA25_05).
+    # Database is inherited from your target (e.g., FEA25_05)
     schema: raw_adventure_works
     description: "Raw AdventureWorks tables used for the Sales domain."
 
@@ -16,16 +16,40 @@ sources:
           - name: SalesOrderID
             description: "Primary key of the order header."
             tests: [not_null, unique]
+
           - name: CustomerID
             description: "FK to customer."
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'customer')
+                  to: source('raw_adventure_works','customer')
                   field: CustomerID
+
           - name: OrderDate
             description: "Order creation date."
             tests: [not_null]
+
+          - name: Status
+            description: "Order workflow status code."
+            tests:
+              - relationships:          # validate against seed dictionary
+                  to: ref('order_status')  # seed model name
+                  field: order_status_code
+
+          - name: CreditCardID
+            description: "FK to creditcard (nullable)."
+            tests:
+              - relationships:
+                  to: source('raw_adventure_works','creditcard')
+                  field: CreditCardID
+
+          - name: ShipToAddressID
+            description: "FK to address (ship-to)."
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_adventure_works','address')
+                  field: AddressID
 
       - name: salesorderdetail
         identifier: SALES_SALESORDERDETAIL
@@ -39,18 +63,21 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'salesorderheader')
+                  to: source('raw_adventure_works','salesorderheader')
                   field: SalesOrderID
+
           - name: SalesOrderDetailID
             description: "Line identifier inside an order."
             tests: [not_null]
+
           - name: ProductID
             description: "FK to product."
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'product')
+                  to: source('raw_adventure_works','product')
                   field: ProductID
+
           - name: OrderQty
             description: "Quantity ordered."
             tests:
@@ -58,6 +85,7 @@ sources:
               - dbt_utils.expression_is_true:
                   expression: ">= 1"
                   severity: warn
+
           - name: UnitPrice
             description: "Unit price applied on the line."
             tests:
@@ -65,8 +93,9 @@ sources:
               - dbt_utils.expression_is_true:
                   expression: ">= 0"
                   severity: warn
+
           - name: UnitPriceDiscount
-            description: "Unit discount applied on the line."
+            description: "Unit discount applied on the line (0..1)."
             tests:
               - not_null
               - dbt_utils.expression_is_true:
@@ -83,16 +112,14 @@ sources:
             description: "FK to person (nullable when it is a store)."
             tests:
               - relationships:
-                  to: source('raw_adventure_works', 'person')
+                  to: source('raw_adventure_works','person')
                   field: BusinessEntityID
-                  severity: warn
           - name: StoreID
             description: "FK to store (nullable when it is a person)."
             tests:
               - relationships:
-                  to: source('raw_adventure_works', 'store')
+                  to: source('raw_adventure_works','store')
                   field: BusinessEntityID
-                  severity: warn
 
       - name: store
         identifier: SALES_STORE
@@ -134,13 +161,13 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'salesorderheader')
+                  to: source('raw_adventure_works','salesorderheader')
                   field: SalesOrderID
           - name: SalesReasonID
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'salesreason')
+                  to: source('raw_adventure_works','salesreason')
                   field: SalesReasonID
 
       # PRODUCTION
@@ -153,12 +180,11 @@ sources:
           - name: Name
             tests: [not_null]
           - name: ProductSubcategoryID
-            description: "FK to product subcategory (nullable for some products)."
+            description: "FK to productsubcategory (nullable)."
             tests:
               - relationships:
-                  to: source('raw_adventure_works', 'productsubcategory')
+                  to: source('raw_adventure_works','productsubcategory')
                   field: ProductSubcategoryID
-                  severity: warn
 
       - name: productsubcategory
         identifier: PRODUCTION_PRODUCTSUBCATEGORY
@@ -170,7 +196,7 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'productcategory')
+                  to: source('raw_adventure_works','productcategory')
                   field: ProductCategoryID
           - name: Name
             tests: [not_null]
@@ -210,7 +236,7 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'stateprovince')
+                  to: source('raw_adventure_works','stateprovince')
                   field: StateProvinceID
 
       - name: stateprovince
@@ -223,7 +249,7 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('raw_adventure_works', 'countryregion')
+                  to: source('raw_adventure_works','countryregion')
                   field: CountryRegionCode
           - name: Name
             tests: [not_null]
