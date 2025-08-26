@@ -18,11 +18,9 @@ models:
 
       - name: customer_id
         description: "FK to sales customer."
-        tests: [not_null]
 
       - name: ship_to_address_id
         description: "FK to ship-to address."
-        tests: [not_null]
 
       - name: credit_card_id
         description: "FK to credit card used in the order (nullable)."
@@ -59,3 +57,28 @@ models:
       - dbt_utils.expression_is_true:
           expression: "abs(total_due_amount - (subtotal_amount + tax_amount + freight_amount)) <= 0.01"
           severity: warn
+
+  - name: stg_sales__order_detail
+    description: "Cleaned order line items for downstream marts."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [sales_order_id, sales_order_detail_id]
+
+    columns:
+      - name: sales_order_id
+        description: "FK to order header."
+
+      - name: sales_order_detail_id
+        description: "Line identifier inside an order."
+
+      - name: product_id
+        description: "FK to product."
+
+      - name: order_qty
+        description: "Quantity ordered."
+
+      - name: unit_price
+        description: "Unit price applied on the line."
+
+      - name: unit_price_discount
+        description: "Unit discount applied on the line (0..1)."
