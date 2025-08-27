@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_production__product
+    description: "Cleaned products enriched with subcategory and category names."
+    columns:
+      - name: product_id
+        description: "Natural key of the product."
+        tests: [not_null, unique]
+
+      - name: product_name
+        description: "Product display name."
+        tests: [not_null]
+
+      - name: subcategory_name
+        description: "Subcategory name (nullable when product has no subcategory)."
+
+      - name: category_name
+        description: "Category name (nullable when product has no subcategory/category)."
