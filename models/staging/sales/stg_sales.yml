@@ -82,3 +82,30 @@ models:
 
       - name: unit_price_discount
         description: "Unit discount applied on the line (0..1)."
+
+  - name: stg_sales__customer
+    description: "Cleaned customers unified from person/store with a single display name."
+    columns:
+      - name: customer_id
+        description: "Natural key of the customer."
+        tests: [not_null, unique]
+
+      - name: customer_type
+        description: "Customer kind derived from available link (Person / Store / Unknown)."
+        tests:
+          - accepted_values:
+              values: ['Person', 'Store', 'Unknown']
+              severity: warn
+
+      - name: customer_name
+        description: "Display name: store name or person full name."
+        tests:
+          - not_null:
+              severity: warn
+
+      - name: person_id
+        description: "FK to person (nullable for store customers)."
+
+      - name: store_id
+        description: "FK to store (nullable for person customers)."
+
