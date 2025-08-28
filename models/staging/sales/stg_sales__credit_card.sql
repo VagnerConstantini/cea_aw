@@ -8,8 +8,8 @@ with
 
     , renamed as (
         select
-            cast(CreditCardID as int)  as credit_card_id
-            , cast(CardType as string) as card_type
+            cast(CreditCardID as number) as credit_card_id
+            , cast(CardType as string)   as card_type
         from source
     )
 
