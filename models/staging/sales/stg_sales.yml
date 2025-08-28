@@ -120,4 +120,26 @@ models:
         description: "Card brand/type (e.g., Vista, SuperiorCard, etc.)."
         tests: [not_null]
 
+  - name: stg_sales__sales_reason
+    description: "Sales reasons (e.g., Promotion, Marketing) cleaned for downstream marts."
+    columns:
+      - name: sales_reason_id
+        description: "Natural key of the sales reason."
+        tests: [not_null, unique]
+      - name: reason_name
+        description: "Human-friendly reason name."
+        tests: [not_null]
+      - name: reason_type
+        description: "Reason grouping/type (e.g., Promotion, Marketing, Other)."
+        tests: [not_null]
+
+  - name: stg_sales__order_sales_reason
+    description: "Bridge between orders and sales reasons (M:N)."
+    columns:
+      - name: sales_order_id
+        description: "Order natural key."
+      - name: sales_reason_id
+        description: "Sales reason natural key."
+
+
 

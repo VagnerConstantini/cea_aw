@@ -32,11 +32,11 @@ with
                 when s.store_id is not null then 'Store'
                 when p.person_id is not null then 'Person'
                 else 'Unknown'
-            end as customer_type
+            end                          as customer_type
             , coalesce(
                 s.store_name
                 , nullif(trim(concat_ws(' ', p.FirstName, p.MiddleName, p.LastName)), '')
-            ) as customer_name
+            )                            as customer_name
         from customer c
         left join person p
             on p.person_id = c.PersonID
