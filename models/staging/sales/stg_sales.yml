@@ -109,3 +109,15 @@ models:
       - name: store_id
         description: "FK to store (nullable for person customers)."
 
+  - name: stg_sales__credit_card
+    description: "Credit card reference from OLTP with the minimal fields used downstream."
+    columns:
+      - name: credit_card_id
+        description: "Natural key of the credit card."
+        tests: [not_null, unique]
+
+      - name: card_type
+        description: "Card brand/type (e.g., Vista, SuperiorCard, etc.)."
+        tests: [not_null]
+
+
