@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: int_geography__ship_to
+    description: >
+      Cleaned ship-to geography at address grain (AddressID), joining address → stateprovince → countryregion.
+      Used to enrich sales with city/state/country.
+    columns:
+      - name: address_id
+        description: "Address natural key (ship-to)."
+        tests: [not_null, unique]
+
+      - name: city_name
+        description: "City for the address."
+        tests: [not_null]
+
+      - name: state_province_id
+        description: "FK to state/province reference."
+        tests: [not_null]
+
+      - name: state_province_name
+        description: "State/Province name."
+        tests: [not_null]
+
+      - name: state_province_code
+        description: "State/Province code (e.g., 'CA', 'WA')."
+
+      - name: country_region_code
+        description: "ISO-like country/region code."
+        tests: [not_null]
+
+      - name: country_region_name
+        description: "Country/Region name."
+        tests: [not_null]
