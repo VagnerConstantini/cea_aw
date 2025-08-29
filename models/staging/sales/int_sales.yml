@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: int_sales__order_line
+    description: "Order lines joined to headers with monetary calculations. Grain: one row per order line."
+    columns:
+      - name: sales_order_id
+        description: "Order natural key."
+      - name: sales_order_detail_id
+        description: "Order line identifier."
+      - name: product_id
+        description: "FK to product."
+      - name: order_date
+        description: "Order creation date."
+      - name: status_code
+        description: "Order status numeric code."
+      - name: customer_id
+        description: "FK to customer."
+      - name: ship_to_address_id
+        description: "FK to shipping address."
+      - name: credit_card_id
+        description: "FK to credit card used (nullable)."
+      - name: order_qty
+        description: "Quantity ordered."
+      - name: unit_price
+        description: "Unit price."
+      - name: unit_price_discount
+        description: "Unit discount rate (0..1)."
+      - name: gross_amount
+        description: "order_qty * unit_price."
+      - name: discount_amount
+        description: "order_qty * unit_price * unit_price_discount."
+      - name: net_amount
+        description: "gross_amount - discount_amount."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [sales_order_id, sales_order_detail_id]
+      - dbt_utils.expression_is_true:
+          expression: "abs(net_amount - (gross_amount - discount_amount)) <= 0.01"
+          severity: warn
