@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: "Product dimension built from staging (1 row per product)."
+    columns:
+      - name: product_key
+        description: "Surrogate key (hash of product_id)."
+        tests: [not_null, unique]
+
+      - name: product_id
+        description: "Natural key from OLTP (Production.ProductID)."
+        tests: [not_null]
+
+      - name: product_name
+        description: "Product display name."
+        tests: [not_null]
+
+      - name: product_subcategory_name
+        description: "Optional subcategory name for the product."
+
+      - name: product_category_name
+        description: "Optional category name for the product."
