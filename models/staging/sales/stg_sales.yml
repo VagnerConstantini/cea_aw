@@ -99,10 +99,8 @@ models:
 
       - name: customer_name
         description: "Display name: store name or person full name."
-        tests:
-          - not_null:
-              severity: warn
-
+        tests: [not_null]
+                  
       - name: person_id
         description: "FK to person (nullable for store customers)."
 
