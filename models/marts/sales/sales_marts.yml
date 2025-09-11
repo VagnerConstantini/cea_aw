@@ -49,3 +49,18 @@ models:
 
       - name: store_id
         description: "Lineage: FK to STORE when type=Store (nullable)."
+
+  - name: dim_credit_card
+    description: "Credit card dimension (brand/type and expiration)."
+    columns:
+      - name: credit_card_key
+        description: "Surrogate key (hash of credit_card_id)."
+        tests: [not_null, unique]
+
+      - name: credit_card_id
+        description: "Natural key from SALES_CREDITCARD."
+        tests: [not_null, unique]
+
+      - name: card_type
+        description: "Credit card brand/type"
+        tests: [not_null]
