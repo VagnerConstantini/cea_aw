@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: "Product dimension built from staging (1 row per product)."
+    columns:
+      - name: product_key
+        description: "Surrogate key (hash of product_id)."
+        tests: [not_null, unique]
+
+      - name: product_id
+        description: "Natural key from OLTP (Production.ProductID)."
+        tests: [not_null]
+
+      - name: product_name
+        description: "Product display name."
+        tests: [not_null]
+
+      - name: product_subcategory_name
+        description: "Optional subcategory name for the product."
+
+      - name: product_category_name
+        description: "Optional category name for the product."
+
+  - name: dim_customer
+    description: "Customer dimension (person or store) with a single display name."
+    columns:
+      - name: customer_key
+        description: "Surrogate key for the customer (hash of customer_id)."
+        tests: [not_null, unique]
+
+      - name: customer_id
+        description: "Natural key from source (SALES_CUSTOMER.CustomerID)."
+        tests: [not_null, unique]
+
+      - name: customer_type
+        description: "Customer classification: Store, Person, or Unknown."
+        tests:
+          - accepted_values:
+              values: ['Store', 'Person', 'Unknown']
+              severity: warn
+
+      - name: customer_name
+        description: "Display name (store name or person full name)."
+        tests: [not_null]
+
+      - name: person_id
+        description: "Lineage: FK to PERSON when type=Person (nullable)."
+
+      - name: store_id
+        description: "Lineage: FK to STORE when type=Store (nullable)."
