@@ -1,7 +1,7 @@
 {{ config(materialized='table') }}
 
 with
-    source as (
+    src as (
         select
             product_id
             , product_name
@@ -17,7 +17,7 @@ with
             , cast(product_name as string)                         as product_name
             , cast(subcategory_name as string)                     as product_subcategory_name
             , cast(category_name as string)                        as product_category_name
-        from source
+        from src
     )
 
 select *
