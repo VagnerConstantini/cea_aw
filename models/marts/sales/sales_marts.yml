@@ -64,3 +64,32 @@ models:
       - name: card_type
         description: "Credit card brand/type"
         tests: [not_null]
+
+  - name: dim_geography
+    description: "Geography dimension at City–State–Country grain (ship-to)."
+    columns:
+      - name: geography_key
+        description: "Surrogate key (hash of country_code, state_province_code, city)."
+        tests: [not_null, unique]
+
+      - name: city
+        description: "City (ship-to)."
+        tests: [not_null]
+
+      - name: state_province
+        description: "State/Province name."
+        tests: [not_null]
+
+      - name: state_province_code
+        description: "State/Province code (from source)."
+        tests: [not_null]
+
+      - name: country
+        description: "Country/Region name."
+        tests: [not_null]
+
+      - name: country_code
+        description: "Country/Region code."
+        tests: [not_null]
+
+  
