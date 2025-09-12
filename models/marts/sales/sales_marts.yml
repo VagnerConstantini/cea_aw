@@ -111,4 +111,23 @@ models:
         description: "Category/type of sales reason."
         tests: [not_null]
 
+  - name: bridge_sales_reason
+    description: "Bridge table linking orders to sales reasons (M:N)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [order_id, sales_reason_key]
+    columns:
+      - name: order_id
+        description: "Natural key of the order (from SALESORDERHEADER)."
+        tests: [not_null]
+
+      - name: sales_reason_key
+        description: "FK to dim_sales_reason."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_sales_reason')
+                field: sales_reason_key
+
   
