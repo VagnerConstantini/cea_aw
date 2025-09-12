@@ -92,4 +92,23 @@ models:
         description: "Country/Region code."
         tests: [not_null]
 
+  - name: dim_sales_reason
+    description: "Sales reason dimension (e.g., Promotion, Marketing) with surrogate key."
+    columns:
+      - name: sales_reason_key
+        description: "Surrogate key (hash of SR0 + sales_reason_id)."
+        tests: [not_null, unique]
+
+      - name: sales_reason_id
+        description: "Natural key from SALES_SALESREASON."
+        tests: [not_null, unique]
+
+      - name: reason_name
+        description: "Sales reason name."
+        tests: [not_null]
+
+      - name: reason_type
+        description: "Category/type of sales reason."
+        tests: [not_null]
+
   
