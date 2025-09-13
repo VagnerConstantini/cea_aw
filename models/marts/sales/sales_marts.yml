@@ -130,4 +130,31 @@ models:
                 to: ref('dim_sales_reason')
                 field: sales_reason_key
 
+  - name: dim_date
+    description: "Calendar dimension (one row per day) for time-based analysis."
+    columns:
+      - name: date_key
+        description: "Surrogate key in yyyymmdd format."
+        tests: [not_null, unique]
+
+      - name: date_day
+        description: "Actual date."
+        tests: [not_null, unique]
+
+      - name: year
+        description: "Year of the date."
+        tests: [not_null]
+
+      - name: month
+        description: "Month number (1–12)."
+        tests: [not_null]
+
+      - name: month_name
+        description: "Month name."
+        tests: [not_null]
+
+      - name: year_month
+        description: "Year-month string (YYYY-MM)."
+        tests: [not_null]
+
   
