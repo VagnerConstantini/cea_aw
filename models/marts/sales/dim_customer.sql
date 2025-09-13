@@ -12,7 +12,7 @@ with
     )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['customer_id']) }} as customer_key
+    {{ dbt_utils.generate_surrogate_key(["'CU0'", "customer_id"]) }} as customer_key
     , cast(customer_id   as number)                         as customer_id
     , cast(customer_type as string)                         as customer_type
     , cast(customer_name as string)                         as customer_name

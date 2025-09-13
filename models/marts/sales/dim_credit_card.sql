@@ -8,7 +8,7 @@ with src as (
 )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['credit_card_id']) }} as credit_card_key
+    {{ dbt_utils.generate_surrogate_key(["'CC0'", "credit_card_id"]) }} as credit_card_key
     , cast(credit_card_id as number)                           as credit_card_id
     , cast(card_type      as string)                           as card_type
 from src
