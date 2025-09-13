@@ -237,4 +237,21 @@ models:
         description: "Net sales (gross - discount)."
         tests: [not_null]
 
+  - name: dim_order_status
+    description: "Order status dimension (seed-based mapping from numeric code to readable name)."
+    columns:
+      - name: order_status_key
+        description: "Surrogate key for order status."
+        tests: [not_null, unique]
+
+      - name: status_code
+        description: "Numeric status code from the source system."
+        tests:
+          - not_null
+          - unique
+
+      - name: status_name
+        description: "Human-readable status label."
+        tests: [not_null]
+
   
