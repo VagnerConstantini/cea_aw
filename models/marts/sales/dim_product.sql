@@ -12,7 +12,7 @@ with
 
     , final as (
         select
-            {{ dbt_utils.generate_surrogate_key(['product_id']) }} as product_key
+            {{ dbt_utils.generate_surrogate_key(["'PR0'", "product_id"]) }} as product_key
             , cast(product_id as number(38,0))                     as product_id
             , cast(product_name as string)                         as product_name
             , cast(subcategory_name as string)                     as product_subcategory_name
