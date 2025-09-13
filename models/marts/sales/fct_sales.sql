@@ -109,9 +109,9 @@ select
     , order_status_key
     , cast(status_code           as number)       as status_code
     , cast(order_qty             as number(18,0)) as order_qty
-    , cast(unit_price            as number(18,2)) as unit_price
+    , cast(unit_price            as number(18,4)) as unit_price
     , cast(unit_price_discount   as number(9,4))  as unit_price_discount
-    , cast(gross_amount          as number(18,2)) as gross_amount
-    , cast(discount_amount       as number(18,2)) as discount_amount
-    , cast(net_amount            as number(18,2)) as net_amount
+    , cast(gross_amount          as number(18,4)) as gross_amount
+    , cast(discount_amount       as number(18,4)) as discount_amount
+    , cast(net_amount            as number(18,4)) as net_amount
 from dim_keys

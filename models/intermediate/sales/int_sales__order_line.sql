@@ -34,11 +34,11 @@ with
             , d.order_qty
             , d.unit_price
             , d.unit_price_discount
-            , cast(d.order_qty * d.unit_price                          as number(18,2)) as gross_amount
-            , cast(d.order_qty * d.unit_price * d.unit_price_discount  as number(18,2)) as discount_amount
+            , cast(d.order_qty * d.unit_price                          as number(18,4)) as gross_amount
+            , cast(d.order_qty * d.unit_price * d.unit_price_discount  as number(18,4)) as discount_amount
             , cast(
                 (d.order_qty * d.unit_price)
-                - (d.order_qty * d.unit_price * d.unit_price_discount) as number(18,2)) as net_amount
+                - (d.order_qty * d.unit_price * d.unit_price_discount) as number(18,4)) as net_amount
         from detail d
         inner join header h
             on h.sales_order_id = d.sales_order_id
