@@ -133,29 +133,29 @@ models:
   - name: dim_date
     description: "Calendar dimension (one row per day) for time-based analysis."
     columns:
-      - name: date_key
-        description: "Surrogate key in yyyymmdd format."
-        tests: [not_null, unique]
+    - name: date_key
+      description: "Surrogate key generated from date_day (prefix DT0)."
+      tests: [not_null, unique]
 
-      - name: date_day
-        description: "Actual date."
-        tests: [not_null, unique]
+    - name: date_day
+      description: "Actual date."
+      tests: [not_null, unique]
 
-      - name: year
-        description: "Year of the date."
-        tests: [not_null]
+    - name: year
+      description: "Year of the date."
+      tests: [not_null]
 
-      - name: month
-        description: "Month number (1–12)."
-        tests: [not_null]
+    - name: month_number
+      description: "Month number (1–12)."
+      tests: [not_null]
 
-      - name: month_name
-        description: "Month name."
-        tests: [not_null]
+    - name: month_name
+      description: "Abbreviated month name (Jan, Feb, ...)."
+      tests: [not_null]
 
-      - name: year_month
-        description: "Year-month string (YYYY-MM)."
-        tests: [not_null]
+    - name: year_month
+      description: "Year-month string (YYYY-MM)."
+      tests: [not_null]
 
   - name: fct_sales
     description: >
@@ -207,7 +207,7 @@ models:
               to: ref('dim_geography')
               field: geography_key
 
-      - name: date_key
+      - name: order_date_key
         description: "FK to dim_date."
         tests:
           - not_null

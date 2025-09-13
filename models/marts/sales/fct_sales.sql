@@ -56,7 +56,6 @@ with lines as (
     select
         j.sales_order_id
         , j.sales_order_detail_id
-        , j.order_date
         , j.status_code
         , j.customer_id
         , j.credit_card_id
@@ -71,7 +70,7 @@ with lines as (
         , dcu.customer_key
         , dcc.credit_card_key
         , dge.geography_key
-        , dde.date_key
+        , dde.date_key as order_date_key
         , dos.order_status_key
     from joined j
     -- product
@@ -106,7 +105,7 @@ select
     , customer_key
     , credit_card_key
     , geography_key
-    , date_key
+    , order_date_key
     , order_status_key
     , cast(status_code           as number)       as status_code
     , cast(order_qty             as number(18,0)) as order_qty
