@@ -72,6 +72,7 @@ with lines as (
         , dcc.credit_card_key
         , dge.geography_key
         , dde.date_key
+        , dos.order_status_key
     from joined j
     -- product
     left join {{ ref('dim_product') }} dpr
@@ -90,6 +91,9 @@ with lines as (
     -- date
     left join {{ ref('dim_date') }} dde
         on dde.date_day = j.order_date
+    -- order status (seed-based dim)
+    left join {{ ref('dim_order_status') }} dos
+        on dos.status_code = j.status_code
 )
 
 select
@@ -103,8 +107,8 @@ select
     , credit_card_key
     , geography_key
     , date_key
+    , order_status_key
     , cast(status_code           as number)       as status_code
-
     , cast(order_qty             as number(18,0)) as order_qty
     , cast(unit_price            as number(18,2)) as unit_price
     , cast(unit_price_discount   as number(9,4))  as unit_price_discount

@@ -215,8 +215,16 @@ models:
               to: ref('dim_date')
               field: date_key
 
+      - name: order_status_key
+        description: "FK to dim_order_status."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_order_status')
+              field: order_status_key
+
       - name: status_code
-        description: "Numeric order status code (to be mapped to dim_order_status later)."
+        description: "Numeric order status code from the source (kept for audit)."
         tests: [not_null]
 
       - name: order_qty
