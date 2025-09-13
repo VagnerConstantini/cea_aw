@@ -11,10 +11,10 @@ with spine as (
 )
 
 select
-    cast(to_char(date_day, 'yyyymmdd') as number) as date_key
-    , date_day
-    , extract(year from date_day)                 as year
-    , extract(month from date_day)                as month
-    , to_char(date_day, 'Month')                  as month_name
-    , to_char(date_day, 'yyyy-mm')                as year_month
+    {{ dbt_utils.generate_surrogate_key(["'DT0'", "date_day"]) }} as date_key
+    , cast(date_day                     as date)                  as date_day
+    , cast(extract(year  from date_day) as number)                as year
+    , cast(extract(month from date_day) as number)                as month_number
+    , cast(to_char(date_day, 'Mon')     as string)                as month_name   -- "Jan", "Feb", ...
+    , cast(to_char(date_day, 'YYYY-MM') as string)                as year_month   -- "2025-09"
 from spine
