@@ -58,7 +58,7 @@ with lines as (
         , j.sales_order_detail_id
         , j.status_code
         , j.customer_id
-        , j.credit_card_id
+        , coalesce(j.credit_card_id, -1) as credit_card_id_norm
         , j.product_id
         , j.order_qty
         , j.unit_price
@@ -79,9 +79,9 @@ with lines as (
     -- customer
     left join {{ ref('dim_customer') }} dcu
         on dcu.customer_id = j.customer_id
-    -- credit card (nullable)
+    -- credit card (-1 mapped to "Unknown")
     left join {{ ref('dim_credit_card') }} dcc
-        on dcc.credit_card_id = j.credit_card_id
+        on dcc.credit_card_id = coalesce(j.credit_card_id, -1)
     -- geography
     left join {{ ref('dim_geography') }} dge
         on  dge.country_code        = j.country_region_code
