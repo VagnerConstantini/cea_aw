@@ -198,6 +198,10 @@ models:
               to: ref('dim_credit_card')
               field: credit_card_key
               severity: warn
+      - name: credit_card_id
+        description: Natural key from source system. -1 when not informed.
+      - name: card_type
+        description: Credit card type. "Unknown" when not informed.
 
       - name: geography_key
         description: "FK to dim_geography."
