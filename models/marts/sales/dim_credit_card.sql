@@ -7,14 +7,14 @@ with src as (
     from {{ ref('stg_sales__credit_card') }}
 )
 
-unknown as (
+, unknown as (
     -- linha técnica para casos sem cartão
     select
-        -1          as credit_card_id,
+        -1          as credit_card_id
         , 'Unknown' as card_type
-),
+)
 
-unioned as (
+, unioned as (
     select * from src
     union all
     select * from unknown
