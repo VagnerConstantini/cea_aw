@@ -157,6 +157,10 @@ models:
       description: "Year-month string (YYYY-MM)."
       tests: [not_null]
 
+    - name: year_month_sort
+      description: "Numeric key (YYYYMM) used for chronological sorting of year_month."
+      tests: [not_null, unique]
+
   - name: fct_sales
     description: >
       Fact table at order line grain. Each row represents one sales order detail
