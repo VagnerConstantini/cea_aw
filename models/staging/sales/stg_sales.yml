@@ -124,9 +124,11 @@ models:
       - name: sales_reason_id
         description: "Natural key of the sales reason."
         tests: [not_null, unique]
+
       - name: reason_name
         description: "Human-friendly reason name."
         tests: [not_null]
+
       - name: reason_type
         description: "Reason grouping/type (e.g., Promotion, Marketing, Other)."
         tests: [not_null]
@@ -136,6 +138,7 @@ models:
     columns:
       - name: sales_order_id
         description: "Order natural key."
+        
       - name: sales_reason_id
         description: "Sales reason natural key."
 

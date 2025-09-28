@@ -16,6 +16,7 @@ sources:
           - name: SalesOrderID
             description: "Primary key of the order header."
             tests: [not_null, unique]
+
           - name: CustomerID
             description: "FK to customer."
             tests:
@@ -23,6 +24,7 @@ sources:
               - relationships:
                   to: source('raw_adventure_works', 'customer')
                   field: CustomerID
+
           - name: OrderDate
             description: "Order creation date."
             tests: [not_null]
@@ -41,9 +43,11 @@ sources:
               - relationships:
                   to: source('raw_adventure_works', 'salesorderheader')
                   field: SalesOrderID
+
           - name: SalesOrderDetailID
             description: "Line identifier inside an order."
             tests: [not_null]
+
           - name: ProductID
             description: "FK to product."
             tests:
@@ -51,6 +55,7 @@ sources:
               - relationships:
                   to: source('raw_adventure_works', 'product')
                   field: ProductID
+
           - name: OrderQty
             description: "Quantity ordered."
             tests:
@@ -58,6 +63,7 @@ sources:
               - dbt_utils.expression_is_true:
                   expression: ">= 1"
                   severity: warn
+
           - name: UnitPrice
             description: "Unit price applied on the line."
             tests:
@@ -65,6 +71,7 @@ sources:
               - dbt_utils.expression_is_true:
                   expression: ">= 0"
                   severity: warn
+
           - name: UnitPriceDiscount
             description: "Unit discount applied on the line."
             tests:
@@ -79,15 +86,22 @@ sources:
         columns:
           - name: CustomerID
             tests: [not_null, unique]
+
           - name: PersonID
-            description: "FK to person (nullable when it is a store)."
+            description: >
+              FK to Person. Filled when the customer is an individual person,
+              or when a person is registered as the contact of a store.
+              Null only when the customer is a store without a linked contact person.
             tests:
               - relationships:
                   to: source('raw_adventure_works', 'person')
                   field: BusinessEntityID
                   severity: warn
+
           - name: StoreID
-            description: "FK to store (nullable when it is a person)."
+            description: >
+              FK to Store. Filled when the customer is a store.
+              Null when the customer is only an individual person.
             tests:
               - relationships:
                   to: source('raw_adventure_works', 'store')
@@ -100,6 +114,7 @@ sources:
         columns:
           - name: BusinessEntityID
             tests: [not_null, unique]
+
           - name: Name
             tests: [not_null]
 
@@ -109,6 +124,7 @@ sources:
         columns:
           - name: CreditCardID
             tests: [not_null, unique]
+
           - name: CardType
             tests: [not_null]
 
@@ -118,8 +134,10 @@ sources:
         columns:
           - name: SalesReasonID
             tests: [not_null, unique]
+
           - name: Name
             tests: [not_null]
+
           - name: ReasonType
             tests: [not_null]
 
@@ -136,6 +154,7 @@ sources:
               - relationships:
                   to: source('raw_adventure_works', 'salesorderheader')
                   field: SalesOrderID
+
           - name: SalesReasonID
             tests:
               - not_null
@@ -150,8 +169,10 @@ sources:
         columns:
           - name: ProductID
             tests: [not_null, unique]
+
           - name: Name
             tests: [not_null]
+
           - name: ProductSubcategoryID
             description: "FK to product subcategory (nullable for some products)."
             tests:
@@ -167,11 +188,13 @@ sources:
           - name: ProductSubcategoryID
             tests: [not_null, unique]
           - name: ProductCategoryID
+
             tests:
               - not_null
               - relationships:
                   to: source('raw_adventure_works', 'productcategory')
                   field: ProductCategoryID
+
           - name: Name
             tests: [not_null]
 
@@ -181,6 +204,7 @@ sources:
         columns:
           - name: ProductCategoryID
             tests: [not_null, unique]
+
           - name: Name
             tests: [not_null]
 
@@ -191,6 +215,7 @@ sources:
         columns:
           - name: BusinessEntityID
             tests: [not_null, unique]
+
           - name: PersonType
             description: "Optional person type code."
             tests:
@@ -204,8 +229,10 @@ sources:
         columns:
           - name: AddressID
             tests: [not_null, unique]
+
           - name: City
             tests: [not_null]
+
           - name: StateProvinceID
             tests:
               - not_null
@@ -219,12 +246,14 @@ sources:
         columns:
           - name: StateProvinceID
             tests: [not_null, unique]
+
           - name: CountryRegionCode
             tests:
               - not_null
               - relationships:
                   to: source('raw_adventure_works', 'countryregion')
                   field: CountryRegionCode
+
           - name: Name
             tests: [not_null]
 
@@ -234,6 +263,7 @@ sources:
         columns:
           - name: CountryRegionCode
             tests: [not_null, unique]
+
           - name: Name
             tests: [not_null]
 
